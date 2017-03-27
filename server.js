@@ -32,14 +32,17 @@ function connection(socket) {
     socket.on('room', function(num) {
        socket.join(num);
     });
-    socket.on('message',function(msg,num) {
-        socket.in(num).broadcast.emit('broadcast',msg);
+    socket.on('message',function(obj) {
+        //send to java api
+        //recieve from java
+        //send return
+        socket.in(obj.room).broadcast.emit('message',obj);
     });
-    socket.on('typing',function(name,num) {
-       socket.in(num).broadcast.emit('typing',name + ' is typing ...');
+    socket.on('typing',function(obj) {
+       socket.in(obj.room).broadcast.emit('typing',obj);
     });
     socket.on('stoptyping',function(n){
-        socket.in(n).broadcast.emit('stoptyping');
+        socket.in(n).broadcast.emit('stoptyping', n);
     });
 }
 var http = require('http'),
