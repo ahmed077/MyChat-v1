@@ -1,20 +1,5 @@
 function handleHTTP(req,res) {
     if (req.method == 'GET') {
-        // if (/^\/\d+(?=$|[?/#])/.test(req.url)) {
-        //     req.addListener('end', function() {
-        //         req.url = req.url.replace(/^\/(\d+).*$/, '/\$1.html/');
-        //         static_files.serve(req,res);
-        //     });
-        //     req.resume();
-        // } else if (/^\w+[.]$[html]/.test(req.url)) {
-        //     req.addListener('end', function() {
-        //         static_files.serve(req,res);
-        //     });
-        //     req.resume();
-        // } else {
-        //     res.writeHead(403);
-        //     res.end();
-        // }
         req.addListener('end', function() {
             static_files.serve(req,res);
         });
@@ -33,9 +18,6 @@ function connection(socket) {
        socket.join(num);
     });
     socket.on('message',function(obj) {
-        //send to java api
-        //recieve from java
-        //send return
         socket.in(obj.room).broadcast.emit('message',obj);
     });
     socket.on('typing',function(obj) {
@@ -49,7 +31,6 @@ var http = require('http'),
     node_static = require('node-static'),
     host = 'localhost',
     port = 1000,
-    ASQ = require('asynquence'),
     static_files = new node_static.Server(__dirname),
     http_server = http.createServer(handleHTTP),
     socket_io = require('socket.io').listen(http_server);
@@ -57,5 +38,4 @@ http_server.listen(port, host);
 socket_io.configure(function() {
     socket_io.set('log level', 1);
 });
-require('asynquence-contrib');
 socket_io.on('connection', connection);
